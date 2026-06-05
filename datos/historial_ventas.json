@@ -1,0 +1,64 @@
+[
+    {
+        "numero": 1,
+        "fecha": "01/06/2026 09:46:49",
+        "productos": [
+            {
+                "codigo": "A001",
+                "nombre": "Coca-Cola 600ml",
+                "precio": 20.0,
+                "cantidad": 2,
+                "subtotal": 40.0
+            }
+        ],
+        "subtotal": 40.0,
+        "iva": 6.4,
+        "total": 46.4
+    },
+    {
+        "numero": 2,
+        "fecha": "01/06/2026 14:28:20",
+        "productos": [
+            {
+                "codigo": "A001",
+                "nombre": "Coca-Cola 600ml",
+                "precio": 20.0,
+                "cantidad": 2,
+                "subtotal": 40.0
+            },
+            {
+                "codigo": "B001",
+                "nombre": "Sabritas Original",
+                "precio": 18.0,
+                "cantidad": 2,
+                "subtotal": 36.0
+            }
+        ],
+        "subtotal": 76.0,
+        "iva": 12.16,
+        "total": 88.16
+    },
+    {
+        "numero": 3,
+        "fecha": "01/06/2026 14:28:20",
+        "productos": [
+            {
+                "codigo": "A001",
+                "nombre": "Coca-Cola 600ml",
+                "precio": 20.0,
+                "cantidad": 2,
+                "subtotal": 40.0
+            },
+            {
+                "codigo": "B001",
+                "nombre": "Sabritas Original",
+                "precio": 18.0,
+                "cantidad": 2,
+                "subtotal": 36.0
+            }
+        ],
+        "subtotal": 76.0,
+        "iva": 12.16,
+        "total": 88.16
+    }
+]
