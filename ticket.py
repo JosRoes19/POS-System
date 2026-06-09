@@ -87,25 +87,31 @@ def generar_ticket(carrito, numero_venta):
         print("\n No hay productos en el carrito para generar un ticket.")
         return False
     else:
-        separador("=")
-        print("SISTEMA POS - TICKET DE VENTA")
-        separador("=")
+        separador("=", largo=59)
+        print("SISTEMA POS - TICKET DE VENTA".center(59))
+        separador("=", largo=59)
         print(f"Venta #: {numero_venta}")
         print(f"Fecha: {fecha_hora}")
-        separador("-")
+        separador("-", largo=59)
         print(
-            f"{ 'Producto': <26} { 'Cantidad': >4}"
-            f"{ 'Precio-Unit': >9} {'Total': >10}"
+            f"{'Producto':<26} {'Cantidad':>8} {'Precio-Unit':>12} {'Total':>10}"
         )
-
-        separador()
-        print(f"{'Subtotal': >38} ${subtotal:>9.2f}")
-        print(f"{'IVA (16%)': >38} ${iva:>9.2f}")
-        separador()
-        print(f"{'Total': >38} ${total:>9.2f}")
-        separador("=")
-        print("Gracias por su compra.")
-        separador("=")
+        separador("-", largo=59)
+        for item in carrito:
+            precio_str = f"${item['precio']:.2f}"
+            subtotal_str = f"${item['subtotal']:.2f}"
+            print(
+                f"{item['nombre']:<26} {item['cantidad']:>8} "
+                f"{precio_str:>12} {subtotal_str:>10}"
+            )
+        separador("-", largo=59)
+        print(f"{'Subtotal:':<47} {f'${subtotal:.2f}':>11}")
+        print(f"{'IVA (16%):':<47} {f'${iva:.2f}':>11}")
+        separador("-", largo=59)
+        print(f"{'Total:':<47} {f'${total:.2f}':>11}")
+        separador("=", largo=59)
+        print("Gracias por su compra.".center(59))
+        separador("=", largo=59)
 
         return subtotal, iva, total
 
@@ -157,7 +163,7 @@ def mostrar_historial():
         ===========================================================
 """
 
-def mostrar_detalle_venta(numero_venta):
+def mostrar_detalle_venta():
     historial = cargar_historial()
 
     if not historial:
@@ -205,4 +211,3 @@ def mostrar_detalle_venta(numero_venta):
     separador("-")
     print(f"{'Total:':<53} ${venta['total']:>8.2f}")
     separador("=")
-    pausar()

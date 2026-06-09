@@ -4,7 +4,8 @@ from productos import (
     cargar_catalogo,
     mostrar_catalogo,
     buscar_producto,
-    actualizar_stock
+    actualizar_stock,
+    registrar_producto
 )
 
 from ventas import (
@@ -50,104 +51,137 @@ def mostrar_menu_venta():
     separador("=")
     return input("  Seleccione una opcion: ").strip()
 
+#Ejecuta el ciclo completo de una venta desde el carrito hasta el ticket
+def proceso_venta(catalogo, numero_venta):
+    carrito = crear_carrito()
+
+    if not catalogo:
+        print("El catalogo esta vacio. No se puede realizar venta")
+        pausar()
+        return False
+
+    while True:
+        limpiar_pantalla()
+        print(f"\n Venta #{numero_venta:04d} | Productos en carrito: {len(carrito)}")
+        opcion = mostrar_menu_venta()
+
+        #Agregar producto
+        if opcion == "1":
+            limpiar_pantalla()
+            mostrar_catalogo(catalogo)
+            id = input(" Id del producto: ").strip().upper()
+            cantidad = pedir_entero(" Cantidad: ", minimo=1)
+            agregar_al_carrito(carrito, catalogo, id, cantidad)
+            pausar()
+
+        elif opcion == "2":
+            limpiar_pantalla()
+            eliminar_del_carrito(carrito)
+            pausar()
+
+        elif opcion == "3":
+            limpiar_pantalla()
+            mostrar_carrito(carrito)
+            pausar()
+
+        elif opcion =="4":
+            if not carrito:
+                print("No hay productos en el carrito")
+                pausar()
+                continue
+
+            limpiar_pantalla()
+            generar_ticket(carrito, numero_venta)
+
+            confirmar = input("\n ¿Confirmar venta? (s/n): ").strip().lower()
+
+            if confirmar == "s":
+                for item in carrito:
+                    actualizar_stock(catalogo, item["id"], item["cantidad"])
+                guardar_venta(carrito, numero_venta)
+                print("\n Venta registrada exitosamente, Gracias!")
+                pausar()
+                return True
+            else:
+                print("\n Venta no confirmada. Puedes seguir editando el carrito")
+                pausar()
+
+        elif opcion == "5":
+            confirmar = input("\n ¿Estas seguro de cancelar la venta? (s/n)")
+            if confirmar.lower() == "s":
+                vaciar_carrito(carrito)
+                print("\n Venta cancelada")
+                pausar()
+                return False
+        else:
+            print("\n Opcion no valida. Intenta de nuevo.")
+            pausar()
+def mostrar_menu_historial():
+    separador("=")
+    print("      SISTEMA POS - MENU HISTORIAL")
+    separador("=")
+    print("\n  1. Ver resumen de ventas")
+    print("  2. Ver detalle de una venta")
+    print("  3. Volver al menu principal")
+    separador("=")
+    return input("  Seleccione una opcion: ").strip()
+
+def menu_historial():
+    while True:
+        limpiar_pantalla()
+        opcion = mostrar_menu_historial()
+
+        if opcion == "1":
+            limpiar_pantalla()
+            mostrar_historial()
+            pausar()
+
+        elif opcion == "2":
+            limpiar_pantalla()
+            mostrar_detalle_venta()
+            pausar()
+
+        elif opcion == "3":
+            break
+        
+        else:
+            print("\n Opcion no valida. Intenta de nuevo")
+            pausar()
+
 def main():
     catalogo = cargar_catalogo()
+    numero_venta = obtener_numero_venta()
 
     while True:
         limpiar_pantalla()
         opcion = mostrar_menu_principal()
 
+        # nueva venta
         if opcion == "1":
-            # Nueva venta
-            carrito = crear_carrito()
-            numero_venta = obtener_numero_venta()
-            while True:
-                limpiar_pantalla()
-                print(f"\n  === VENTA ACTIVA #{numero_venta} ===")
-                mostrar_carrito(carrito)
-                opcion_venta = mostrar_menu_venta()
-
-                if opcion_venta == "1":
-                    # Agregar producto al carrito
-                    limpiar_pantalla()
-                    mostrar_catalogo(catalogo)
-                    id_prod = pedir_texto("\n  Ingrese el ID del producto: ").upper()
-                    producto = buscar_producto(catalogo, id_prod)
-                    if producto:
-                        cant = pedir_entero("  Ingrese la cantidad: ", minimo=1)
-                        agregar_al_carrito(carrito, catalogo, id_prod, cant)
-                    else:
-                        print(f"\n  Producto con ID '{id_prod}' no encontrado.")
-                    pausar()
-
-                elif opcion_venta == "2":
-                    # Eliminar producto del carrito
-                    limpiar_pantalla()
-                    eliminar_del_carrito(carrito)
-                    pausar()
-
-                elif opcion_venta == "3":
-                    # Ver carrito
-                    limpiar_pantalla()
-                    mostrar_carrito(carrito)
-                    pausar()
-
-                elif opcion_venta == "4":
-                    # Finalizar venta
-                    if not carrito:
-                        print("\n  El carrito está vacío. No se puede finalizar la venta.")
-                        pausar()
-                        continue
-                    
-                    limpiar_pantalla()
-                    generar_ticket(carrito, numero_venta)
-                    
-                    # Guardar venta en el historial
-                    guardar_venta(carrito, numero_venta)
-                    
-                    # Actualizar stock de los productos vendidos
-                    for item in carrito:
-                        actualizar_stock(catalogo, item['id'], item['cantidad'])
-                    
-                    print("\n  Venta finalizada exitosamente.")
-                    pausar()
-                    break
-
-                elif opcion_venta == "5":
-                    # Cancelar venta
-                    confirmar = pedir_texto("\n  ¿Está seguro que desea cancelar la venta? (s/n): ").lower()
-                    if confirmar == 's':
-                        vaciar_carrito(carrito)
-                        print("\n  Venta cancelada.")
-                        pausar()
-                        break
-                else:
-                    print("\n  Opción no válida.")
-                    pausar()
-
+            venta_completada = proceso_venta(catalogo, numero_venta)
+            if venta_completada:
+                numero_venta += 1
+            
         elif opcion == "2":
-            # Ver catalogo de productos
             limpiar_pantalla()
             mostrar_catalogo(catalogo)
             pausar()
 
         elif opcion == "3":
-            # Agregar producto al catalogo
             limpiar_pantalla()
             registrar_producto(catalogo)
             pausar()
 
         elif opcion == "4":
-            # Historial de ventas
-            limpiar_pantalla()
-            mostrar_detalle_venta(None)
+            menu_historial()
 
         elif opcion == "5":
-            # Salir
-            print("\n  ¡Gracias por usar el sistema POS! Saliendo...")
+            limpiar_pantalla()
+            print("\n Cerrando el sistema... Hasta luego!!\n")
             break
+
         else:
-            print("\n  Opción no válida.")
+            print("\n Opcion no valida. Intenta de nuevo")
             pausar()
 
 # Este bloque asegura que main() solo se ejecute cuando se corre

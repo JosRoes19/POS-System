@@ -38,5 +38,10 @@
         "nombre": "Huevo Blanco 12 pzas",
         "precio": 45.0,
         "stock": 15
+    },
+    "3": {
+        "nombre": "Papas",
+        "precio": 10.0,
+        "stock": 20
     }
 }

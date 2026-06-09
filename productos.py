@@ -65,7 +65,7 @@ def registrar_producto(catalogo):
 
     nombre = pedir_texto("\n Ingrese el nombre: ")
     precio = pedir_flotante("\n Ingrese el precio: ")
-    stock = pedir_entero("\n Ingrese el stock: ")
+    stock = pedir_entero("\n Ingrese el stock: ", minimo=0)
 
     catalogo[id] = {
         "nombre": nombre,

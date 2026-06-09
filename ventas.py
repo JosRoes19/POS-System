@@ -37,7 +37,7 @@ def agregar_al_carrito(carrito, catalogo, id, cantidad):
 
 # Si el producto no esta en el carrito, lo agregamos
     nuevo_item = {
-        'id': producto['id'],
+        'id': id.upper(),
         'nombre': producto['nombre'],
         'precio': producto['precio'],
         'cantidad': cantidad,
